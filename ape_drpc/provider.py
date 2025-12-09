@@ -53,9 +53,6 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
 
     @property
     def ws_uri(self):
-        if self.config.use_tor_proxy:
-            raise ValueError("This provider does not support websockets over Tor")
-
         # NOTE: Overriding `Web3Provider.http_uri` implementation
         return self.uri.replace("https://", "wss://")
 
