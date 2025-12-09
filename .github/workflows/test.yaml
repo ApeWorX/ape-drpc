@@ -49,9 +49,10 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
-                python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+                python-version: ["3.10", "3.11", "3.12", "3.13"]
 
         env:
+          APE_DRPC_API_KEY: ${{ secrets.APE_DRPC_API_KEY }}
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
