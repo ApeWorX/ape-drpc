@@ -55,7 +55,7 @@ dev = [
     "pytest-xdist",
     "pytest-watch",
     "commitlint",
-    "pre-commit",
+    "prek",
     "IPython",
     "ipdb",
     { include-group = "lint" },
