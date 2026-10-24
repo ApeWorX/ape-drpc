@@ -65,4 +65,4 @@ jobs:
             python-version: ${{ matrix.python-version }}
 
         - name: Run Tests
-          run: uv run --group test pytest -m "not fuzzing" -s
+          run: uv run --group test ape test -m "not fuzzing" -s
