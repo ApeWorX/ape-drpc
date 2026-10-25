@@ -73,4 +73,4 @@ jobs:
 
         - name: Run Tests (Windows)
           if: runner.os == 'Windows'
-          run: uv run --group test pytest -m "not fuzzing" -s
+          run: uv run --group test pytest -p no:ape_test -m "not fuzzing" -s

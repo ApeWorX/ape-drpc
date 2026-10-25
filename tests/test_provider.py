@@ -27,6 +27,7 @@ NETWORK_SKIPS = {
     "ethereum": {"holesky"},  # sunset; public tip months stale
     "scroll": {"sepolia"},  # free-plan gated
     "sei": {"testnet"},  # eth_blockNumber unavailable on free
+    "zora": {"sepolia"},  # public endpoint 400s
 }
 
 
@@ -66,6 +67,9 @@ def test_connection(networks, ecosystem):
                     "rate limit",
                     "too many requests",
                     "429",
+                    "400 client error",
+                    "bad request",
+                    "missing latest block",
                     "extradata",
                     "poa chain",
                 )
