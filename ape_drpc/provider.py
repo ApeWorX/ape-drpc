@@ -39,12 +39,12 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
                 f"Unsupported ecosystem/network: {self.network.ecosystem.name}:{self.network.name}"
             )
 
-        uri = f"{str(self.config.host).rstrip('/')}/{network.short_names[0]}"
-
+        short = network.short_names[0]
         if api_key := self.config.api_key:
-            return f"{uri}/{api_key}"
+            return f"{str(self.config.host).rstrip('/')}/{short}/{api_key}"
 
-        return uri
+        # Public free endpoints work without a NodeCloud key.
+        return f"https://{short}.drpc.org"
 
     @property
     def http_uri(self) -> str:
@@ -63,11 +63,21 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
             # Any chain that *began* as PoA needs the middleware for pre-merge blocks
             avalanche = 43114
             base = 8453
+            bsc = 56
+            bsc_testnet = 97
             optimism = 10
             polygon = 137
             polygon_amoy = 80002
 
-            if self._web3.eth.chain_id in (avalanche, base, optimism, polygon, polygon_amoy):
+            if self._web3.eth.chain_id in (
+                avalanche,
+                base,
+                bsc,
+                bsc_testnet,
+                optimism,
+                polygon,
+                polygon_amoy,
+            ):
                 self._web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
                 is_poa = True
 
@@ -86,6 +96,9 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
                 except ExtraDataLengthError:
                     is_poa = True
                     break
+                except Exception:
+                    # Some chains reject eth_getBlockByNumber("earliest") (BlockNotFound).
+                    continue
                 else:
                     is_poa = (
                         "proofOfAuthorityData" in block
