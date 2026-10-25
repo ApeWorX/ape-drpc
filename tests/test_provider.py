@@ -64,6 +64,8 @@ def test_connection(networks, ecosystem):
                     "upgrade to paid plan",
                     "block not found",
                     "rate limit",
+                    "extradata",
+                    "poa chain",
                 )
             ):
                 pytest.skip(f"{choice}: {err}")

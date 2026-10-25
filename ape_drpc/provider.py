@@ -63,11 +63,21 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
             # Any chain that *began* as PoA needs the middleware for pre-merge blocks
             avalanche = 43114
             base = 8453
+            bsc = 56
+            bsc_testnet = 97
             optimism = 10
             polygon = 137
             polygon_amoy = 80002
 
-            if self._web3.eth.chain_id in (avalanche, base, optimism, polygon, polygon_amoy):
+            if self._web3.eth.chain_id in (
+                avalanche,
+                base,
+                bsc,
+                bsc_testnet,
+                optimism,
+                polygon,
+                polygon_amoy,
+            ):
                 self._web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
                 is_poa = True
 
