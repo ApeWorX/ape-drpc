@@ -39,12 +39,12 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
                 f"Unsupported ecosystem/network: {self.network.ecosystem.name}:{self.network.name}"
             )
 
-        uri = f"{str(self.config.host).rstrip('/')}/{network.short_names[0]}"
-
+        short = network.short_names[0]
         if api_key := self.config.api_key:
-            return f"{uri}/{api_key}"
+            return f"{str(self.config.host).rstrip('/')}/{short}/{api_key}"
 
-        return uri
+        # Public free endpoints work without a NodeCloud key.
+        return f"https://{short}.drpc.org"
 
     @property
     def http_uri(self) -> str:
@@ -86,6 +86,9 @@ class DrpcProvider(Web3Provider, UpstreamProvider, DrpcClient):
                 except ExtraDataLengthError:
                     is_poa = True
                     break
+                except Exception:
+                    # Some chains reject eth_getBlockByNumber("earliest") (BlockNotFound).
+                    continue
                 else:
                     is_poa = (
                         "proofOfAuthorityData" in block
